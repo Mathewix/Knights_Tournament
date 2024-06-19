@@ -20,9 +20,3 @@ All abilities and mechanics are written in the in-game menu which you can access
 2:15 into the game you get a choice of 4 Game Effects that change the way game is played with a benefit and a negative. At 4:00 you can choose to either improve the benefit or remove the negative for the rest of the game.
 
 You can also invest your money in tower, buying upgrade which increases your score for every second since it was bought.
-
-![image](https://github.com/Mathewix/Knights_Tournament/assets/117742733/590c97b0-3e35-414a-856d-2549040f4245)
-![image](https://github.com/Mathewix/Knights_Tournament/assets/117742733/c0eff6b2-194f-4c15-82a4-4468db91d8d0)
-![image](https://github.com/Mathewix/Knights_Tournament/assets/117742733/9a52fad0-2b31-4ae9-bc6a-9ccf338c96de)
-![image](https://github.com/Mathewix/Knights_Tournament/assets/117742733/3017d222-7c7b-4d6f-9e52-3b6a85d79270)
-![image](https://github.com/Mathewix/Knights_Tournament/assets/117742733/47fa8514-52dd-4e6c-a49b-1fbe831db1a3)
