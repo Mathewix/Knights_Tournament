@@ -25,6 +25,7 @@ public class PokrocilyRytier extends ObycajnyRytier{
     private int skusenosti;
     private String raritaText;
 
+
     public PokrocilyRytier(String meno, Schopnost schopnost) {
         super(meno);
         Random r = new Random();
@@ -66,34 +67,41 @@ public class PokrocilyRytier extends ObycajnyRytier{
 
     @Override
     public int getCena() {
-        return super.getCena() + this.schopnost.getCena() + 5;
+        return super.getCena() + this.schopnost.getCena() + 10;
     }
 
     @Override
-    public void pridajSkusenost() {
+    public void pridajSkusenost(boolean moveTheText) {
         this.skusenosti++;
-        switch (this.skusenosti) {
-            case 1 -> {
-                this.rank = Rank.NOVICE;
-                super.rankObrazok = new Image("Obrazky/Novice.png", this.getSuradnice()[0] + 175, this.getSuradnice()[2] + 15);
-                super.rankObrazok.makeVisible();
+        if (this.skusenostiText != null) {
+            this.skusenostiText.makeInvisible();
+            this.skusenostiText.changeText("" + this.skusenosti);
+            if (moveTheText || this.skusenosti == 10) {
+                this.skusenostiText.moveHorizontal(-6);
             }
-            case 3 -> {
-                this.rank = Rank.JOURNEYMAN;
-                this.rankObrazok.changeImage("Obrazky/Journey.png");
-            }
-            case 6 -> {
-                this.rank = Rank.CHAMPION;
-                this.rankObrazok.changeImage("Obrazky/Champ.png");
-            }
-            case 9 -> {
-                this.rank = Rank.LEGEND;
-                this.rankObrazok.changeImage("Obrazky/Legend.png");
-            }
+            this.skusenostiText.makeVisible();
         }
-    }
-    public void pridajSkusenost(int pocet) {
-        this.skusenosti += pocet;
+        if (this.skusenosti >= 1 && this.skusenosti <= 2 && !this.rankCheck.equals("Novice")) {
+            this.rank = Rank.NOVICE;
+            this.rankObrazok.changeImage("Obrazky/Novice.png");
+            this.refreshImage();
+            this.rankCheck = "Novice";
+        } else if (this.skusenosti >= 3 && this.skusenosti <= 5 && !this.rankCheck.equals("JourneyMan")) {
+            this.rank = Rank.JOURNEYMAN;
+            this.rankObrazok.changeImage("Obrazky/Journey.png");
+            this.refreshImage();
+            this.rankCheck = "JourneyMan";
+        } else if (this.skusenosti >= 6 && this.skusenosti <= 8 && !this.rankCheck.equals("Champion")) {
+            this.rank = Rank.CHAMPION;
+            this.rankObrazok.changeImage("Obrazky/Champ.png");
+            this.refreshImage();
+            this.rankCheck = "Champion";
+        } else if (this.skusenosti >= 9 && !this.rankCheck.equals("Legend")) {
+            this.rank = Rank.LEGEND;
+            this.rankObrazok.changeImage("Obrazky/Legend.png");
+            this.refreshImage();
+            this.rankCheck = "Legend";
+        }
     }
 
     public Schopnost getSchopnost() {
@@ -104,16 +112,16 @@ public class PokrocilyRytier extends ObycajnyRytier{
     public int getSila(Miesto miesto) {
         if (miesto instanceof Arena a) {
             if (this.schopnost == Schopnost.CHLAP_JAK_HORA) {
-                return super.getSila(a) + 4;
+                return super.getSila(a) + 5;
             } else if (this.schopnost == Schopnost.PRIRODZENY_TALENT) {
-                return super.getSila(a) + 2;
+                return super.getSila(a) + 3;
             } else if (this.schopnost == Schopnost.NATURALISTA) {
                 if (super.getVyzbroj() == null && super.getTrinket() == null && this.trinket2 == null) {
-                    return super.getSila(a) + 3;
+                    return super.getSila(a) + 4;
                 }
             } else if (this.schopnost == Schopnost.PAN_PRIPRAVENY) {
                 if (super.getVyzbroj() != null && super.getTrinket() != null && this.trinket2 != null) {
-                    return super.getSila(a) + 3;
+                    return super.getSila(a) + 4;
                 }
             }
         }
@@ -125,12 +133,12 @@ public class PokrocilyRytier extends ObycajnyRytier{
         if (miesto instanceof Arena a) {
 
             if (this.schopnost == Schopnost.RODENA_HVIEZDA) {
-                return super.getPopularita(a) + 4;
+                return super.getPopularita(a) + 5;
             } else if (this.schopnost == Schopnost.PRIRODZENY_TALENT) {
-                return super.getPopularita(a) + 2;
+                return super.getPopularita(a) + 3;
             } else if (this.schopnost == Schopnost.NATURALISTA) {
                 if (this.getVyzbroj() == null && this.getTrinket() == null && this.trinket2 == null) {
-                    return super.getPopularita(a) + 3;
+                    return super.getPopularita(a) + 5;
                 }
             } else if (this.schopnost == Schopnost.PAN_PRIPRAVENY) {
                 if (this.getVyzbroj() != null && this.getTrinket() != null && this.trinket2 != null) {

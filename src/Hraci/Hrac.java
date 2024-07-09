@@ -90,7 +90,11 @@ public class Hrac implements Hodnotitelne {
      * @return - vráti false/true podľa úspešnosti pridania
      */
     public boolean pridajRytiera(ObycajnyRytier rytier) {
-        for (int i = 0; this.rytieri.length > i; i++) {
+        var availableSlots = this.rytieri.length;
+        if (!this.doska.unlocked()) {
+            availableSlots--;
+        }
+        for (int i = 0; i < availableSlots; i++) {
             if (this.rytieri[i] == null) {
                 this.rytieri[i] = rytier;
                 if (this.mapa.getEfekt() == Efekt.SLACHTA) {
@@ -101,8 +105,8 @@ public class Hrac implements Hodnotitelne {
                     pR.zmenUmiestnenie(this.doska);
                     pR.kartaRytiera(215 + i * 300, 690, this.mapa,false, true);
                     if (pR.getSchopnost() == Schopnost.DOBRODRUH) {
-                        pR.pridajSkusenost();
-                        pR.pridajSkusenost();
+                        pR.pridajSkusenost(false);
+                        pR.pridajSkusenost(false);
                     }
                     return true;
                 }
@@ -113,13 +117,19 @@ public class Hrac implements Hodnotitelne {
             }
         }
         this.manazerEventov.pozastavHru();
-        JOptionPane.showMessageDialog(null, "Jeden clovek nedokaze spravovat 4 rytierov. \n " +
-                "Skus prepustit jedneho zo svojich a skus to znova", "Chyba", JOptionPane.ERROR_MESSAGE);
+        if (availableSlots == 3) {
+            JOptionPane.showMessageDialog(null, "Jeden clovek nedokaze spravovat 4 rytierov. \n " +
+                    "Skus prepustit jedneho zo svojich a skus to znova", "Chyba", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Na spravovanie 3 rytierov potrebuješ licenciu. \n " +
+                    "Skus si ju kúpiť v pravo dole za 100 toliarov \n alebo prepustit jedneho zo svojich rytierov a skus to znova", "Chyba", JOptionPane.ERROR_MESSAGE);
+        }
+
         return false;
     }
     public void predajRytiera(ObycajnyRytier rytier) {
 
-        for (int i = 0; this.rytieri.length > i; i++) {
+        for (int i = 0; i < 3; i++) {
             if (this.rytieri[i] == rytier) {
                 if (!rytier.getTrinket().isEmpty()) {
                     rytier.zlozPredmet(rytier.getTrinket().get());

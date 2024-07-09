@@ -48,6 +48,7 @@ public class Mapa {
     private final Image vyhodnotenieHry;
     private Efekt efekt;
     private StavEfektu stavEfektu;
+    private int cviciskoUpgrade;
 
 
     public Mapa(Hrac hrac,ManazerEventov manazerEventov) {
@@ -61,7 +62,13 @@ public class Mapa {
         menu.makeVisible();
         this.menuObrazok = new Image("Obrazky/menuObrazok.png",350,170);
         this.vyhodnotenieHry = new Image("Obrazky/vyhodnotenieHry.png", 380, 50);
+        Image cechName = new Image("Obrazky/Cech.png",655,83);
+        cechName.makeVisible();
+        Image cviciskoName = new Image("Obrazky/Cvicisko.png",381,448);
+        cviciskoName.makeVisible();
         this.hrac = hrac;
+        Image krcmaName = new Image("Obrazky/Krcma.png",358,120);
+        krcmaName.makeVisible();
         this.hrac.setMapa(this);
         this.efektyHry = new EfektyHry();
         this.arena = new Arena(400, this.hrac);
@@ -273,6 +280,15 @@ public class Mapa {
      * @return - vráti použiteľné KA ak sme klikli na rytiera, inak null
      */
     public ArrayList<KontextovaAkcia> klikNaRytiera(int x, int y) {
+        if (!this.hrac.getDoska().unlocked()) {
+            var locationX = x > 827 && x <= 1019;
+            var locationY = y > 874 && y <= 952;
+            if (locationX && locationY) {
+                if (this.hrac.zmenStavPenazi(-100)) {
+                    this.hrac.getDoska().unlockThirdKnight();
+                }
+            }
+        }
         for (int i = 0; i < 3; i++) {
             if (this.hrac.getRytier(i) != null) {
                 var klikDoskyX = x > this.hrac.getRytier(i).getSuradnice()[0] && x <= this.hrac.getRytier(i).getSuradnice()[1];
@@ -370,6 +386,8 @@ public class Mapa {
         var suradnice = this.obchod.getSuradnice();
         var klikX = x > suradnice[0] + 150 && x <= suradnice[1] + 150;
         var klikY = y > suradnice[2] && y <= suradnice[3];
+        var rerollX = x > 828 && x <= 980;
+        var rerollY = y > 450 && y <= 525;
         var klikZavri = (x > 175 && x <= 995) && (y > 50 && y <= 542);
         if (this.pohlad == Pohlad.DEFAULT) {
             if (klikX && klikY) {
@@ -381,23 +399,43 @@ public class Mapa {
                 this.obchod.skryObchod();
                 this.pohlad = Pohlad.DEFAULT;
             }
+            if (rerollX && rerollY) {
+                this.obchod.rerollShop();
+            }
         }
     }
     public void klikNaEfekt(int x, int y) {
         if (this.pohlad == Pohlad.VYBER_EFEKTOV) {
+            var suradniceX = x > 928 && x <= 1080;
+            var suradniceY = y > 550 && y <= 625;
+            if (suradniceX && suradniceY && this.efektyHry.getNumberOfOptions() == 4) {
+                this.efektyHry.skryEfekty();
+                this.efektyHry.vyberEfekty();
+                this.efektyHry.zobrazMoznosti();
+            }
+            suradniceX = x > 898 && x <= 1089;
+            suradniceY = y > 386 && y <= 464;
+            if (suradniceX && suradniceY && !this.efektyHry.paid()) {
+                if (this.hrac.zmenStavPenazi(-100)) {
+                    this.efektyHry.unlockForth();
+                }
+            }
             for (int i = 0; i < 4; i++) {
-                var suradniceX = x > 166 + (i * 243) && x <= 409 + (i * 243);
-                var suradniceY = y > 202 && y <= 498;
-                if (suradniceY && suradniceX) {
-                    this.efekt = this.efektyHry.getEfekty()[i];
-                    var obrazokEfektu = new Image(this.efekt.getIkona(),36 ,786);
-                    obrazokEfektu.makeVisible();
-                    this.efektyHry.skryEfekty();
-                    this.obrazokEfektu = new Image(this.efekt.getObrazok(), 100, 554);
-                    this.pohlad = this.predosli;
-                    this.manazerEventov.zapniHru();
-                    this.arena.getVyhry().setEfekt(this.efekt);
-                    break;
+                suradniceX = x > 156 + (i * 243) && x <= 370 + (i * 243);
+                suradniceY = y > 202 && y <= 498;
+                if (i != 3 || this.efektyHry.paid()) {
+                    if (suradniceY && suradniceX) {
+                        this.efekt = this.efektyHry.getEfekty()[i];
+                        var obrazokEfektu = new Image(this.efekt.getIkona(),36 ,786);
+                        obrazokEfektu.makeVisible();
+                        this.efektyHry.skryEfekty();
+                        this.obrazokEfektu = new Image(this.efekt.getObrazok(), 100, 554);
+                        this.pohlad = this.predosli;
+                        this.manazerEventov.zapniHru();
+                        this.arena.getVyhry().setEfekt(this.efekt);
+                        this.arena.setEfekt(this.efekt);
+                        break;
+                    }
                 }
             }
         } else if (this.pohlad == Pohlad.DEFAULT) {
@@ -581,5 +619,13 @@ public class Mapa {
 
     public StavEfektu getStavEfektu() {
         return this.stavEfektu;
+    }
+
+    public void upgradeCvicisko() {
+        this.cviciskoUpgrade++;
+    }
+
+    public int getCviciskoUpgrade() {
+        return cviciskoUpgrade;
     }
 }

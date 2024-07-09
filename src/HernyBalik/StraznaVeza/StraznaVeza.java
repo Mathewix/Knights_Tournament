@@ -10,6 +10,7 @@ public class StraznaVeza {
     private int ziskSkore;
     private final ManazerEventov manazerEventov;
     private final Image zisk;
+    private final Image name;
     private final Text ziskT;
     private int[] suradnice;
     private AkciaVeze[] akcie;
@@ -17,10 +18,12 @@ public class StraznaVeza {
         this.ziskSkore = 0;
         this.manazerEventov = manazerEventov;
         this.zisk = new Image("Obrazky/vezaCislo.png", 915, 265);
+        this.name = new Image("Obrazky/StraznaVeza.png", 880, 77);
         this.ziskT = new Text("" + this.ziskSkore, 960, 300);
         this.ziskT.changeFont("New Rocker", FontStyle.BOLD, 24);
         this.zisk.makeVisible();
         this.ziskT.makeVisible();
+        this.name.makeVisible();
         this.suradnice = new int[]{864, 1093, 106, 320};
         this.akcie = new AkciaVeze[3];
         this.akcie[0] = new plusJedna(this);

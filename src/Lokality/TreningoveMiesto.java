@@ -98,19 +98,22 @@ public abstract class TreningoveMiesto implements MaAktivitu, Miesto {
             }
             if (this.getRytier() instanceof PokrocilyRytier pR) {
                 if (pR.getSchopnost() == Schopnost.TEN_ATLETICKY || pR instanceof LegendarnyRytier) {
-                    this.dobaTrvania = 9 + (getRytier().getSila(this) * (4 - (adrenalin / 10))) - (getRytier().getPopularita(this) * 2) - adrenalin;
+                    this.dobaTrvania = 9 + (getRytier().getSila(this) * (4 - (adrenalin / 10))) - (getRytier().getPopularita(this) * 2)
+                            - adrenalin  - (this.getRytier().getCviciskoVisits() * 3) - mapa.getCviciskoUpgrade();
                     if (this.dobaTrvania <= 20) {
                         this.dobaTrvania = 20;
                     }
                     return this.dobaTrvania;
                 }
-                this.dobaTrvania = 20 + (getRytier().getSila(this) * (5 - (adrenalin / 10))) - (getRytier().getPopularita(this) * 3) - adrenalin;
+                this.dobaTrvania = 20 + (getRytier().getSila(this) * (5 - (adrenalin / 10))) - (getRytier().getPopularita(this) * 3)
+                        - adrenalin  - (this.getRytier().getCviciskoVisits() * 4) - mapa.getCviciskoUpgrade();
                 if (this.dobaTrvania <= 20) {
                     this.dobaTrvania = 20;
                 }
                 return this.dobaTrvania;
             }
-            this.dobaTrvania = 24 + (getRytier().getSila(this) * (8 - (adrenalin / 10))) - (getRytier().getPopularita(this) * 3) - adrenalin;
+            this.dobaTrvania = 24 + (getRytier().getSila(this) * (8 - (adrenalin / 10))) - (getRytier().getPopularita(this) * 3)
+                    - adrenalin - (this.getRytier().getCviciskoVisits() * 5) - mapa.getCviciskoUpgrade() * 2;
             if (this.dobaTrvania <= 20) {
                 this.dobaTrvania = 20;
             }
@@ -122,21 +125,29 @@ public abstract class TreningoveMiesto implements MaAktivitu, Miesto {
 
     public int getDobaTrvaniaKrcma() {
         if (getRytier() != null) {
+            var mapa = this.manazerEventov.getMapa();
+            var dobrodruzstvo = 0;
+            if (mapa.getEfekt() == Efekt.NEZABUDNUTELNE_DOBRODRUZSTVO && mapa.getStavEfektu() == StavEfektu.VYLEPSENE) {
+                dobrodruzstvo = 10;
+            }
             if (this.getRytier() instanceof PokrocilyRytier pR) {
                 if (pR.getSchopnost() == Schopnost.TEN_OBLUBENY || pR instanceof LegendarnyRytier) {
-                    this.dobaTrvania = 12  + (getRytier().getPopularita(this) * 5) - (this.manazerEventov.getFazaHry() * 8) - (getRytier().getSila(this) * 4);
+                    this.dobaTrvania = 12  + (getRytier().getPopularita(this) * (7 - dobrodruzstvo/10)) - (this.manazerEventov.getFazaHry() * 8)
+                            - (getRytier().getSila(this) * 4) - dobrodruzstvo;
                     if (this.dobaTrvania <= 20) {
                         this.dobaTrvania = 20;
                     }
                     return this.dobaTrvania;
                 }
-                this.dobaTrvania = 23  + (getRytier().getPopularita(this) * 9) - (this.manazerEventov.getFazaHry() * 8) - (getRytier().getSila(this) * 5);
+                this.dobaTrvania = 23  + (getRytier().getPopularita(this) * (9 - dobrodruzstvo/10)) - (this.manazerEventov.getFazaHry() * 8)
+                        - (getRytier().getSila(this) * 5) - dobrodruzstvo;
                 if (this.dobaTrvania <= 20) {
                     this.dobaTrvania = 20;
                 }
                 return this.dobaTrvania;
             }
-            this.dobaTrvania = 29 + (getRytier().getPopularita(this) * 13) - (this.manazerEventov.getFazaHry() * 8)  - (getRytier().getSila(this) * 5);
+            this.dobaTrvania = 29 + (getRytier().getPopularita(this) * (13 - dobrodruzstvo/5)) - (this.manazerEventov.getFazaHry() * 8)
+                    - (getRytier().getSila(this) * 5) - dobrodruzstvo;
             if (this.dobaTrvania <= 20) {
                 this.dobaTrvania = 20;
             }
@@ -158,30 +169,26 @@ public abstract class TreningoveMiesto implements MaAktivitu, Miesto {
          if (this instanceof Cvicisko cvicisko) {
             if (getRytier() != null) {
                 if (mapa.getEfekt() != Efekt.ADRENALIN) {
-                    if (mapa.getEfekt() != Efekt.SLAVNOSTI) {
-                        this.getRytier().pridajSilu();
-                    } else if (mapa.getEfekt() == Efekt.SLAVNOSTI) {
-                        if (mapa.getStavEfektu() != StavEfektu.VYLEPSENE) {
-                            this.getRytier().pridajPopularitu();
-                        } else if (mapa.getStavEfektu() == StavEfektu.VYLEPSENE) {
-                            this.getRytier().pridajPopularitu(2);
-                        }
-                    }
+                    this.getRytier().pridajSilu();
                 } else {
                     this.getRytier().pridajSilu(2);
+                }
+                if (mapa.getEfekt() == Efekt.TIMOVA_PRACA && mapa.getStavEfektu() == StavEfektu.VYLEPSENE) {
+                    mapa.upgradeCvicisko();
                 }
                 cvicisko.vratRytierov(true, cvicisko.getRytier());
             }
         } else if (this instanceof Krcma krcma) {
             if (getRytier() != null) {
-                if (mapa.getEfekt() == Efekt.TIMOVA_PRACA) {
-                    if (mapa.getStavEfektu() != StavEfektu.VYLEPSENE) {
-                        this.getRytier().pridajSilu();
-                    } else if (mapa.getStavEfektu() == StavEfektu.VYLEPSENE){
-                        this.getRytier().pridajSilu(2);
+                if (mapa.getEfekt() == Efekt.SLAVNOSTI) {
+                    if (mapa.getStavEfektu() == StavEfektu.VYLEPSENE){
+                        this.getRytier().pridajPopularitu(2);
                     }
                 } else {
                     this.getRytier().pridajPopularitu();
+                }
+                if (mapa.getEfekt() == Efekt.NEZABUDNUTELNE_DOBRODRUZSTVO) {
+                    this.getRytier().pridajSkusenost(false);
                 }
                 krcma.vratRytierov(true, krcma.getRytier());
             }

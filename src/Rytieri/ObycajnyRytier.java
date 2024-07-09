@@ -28,12 +28,14 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
     private final String meno;
     protected int sila;
     protected int popularita;
+    protected int cviciskoVisits;
 
     private int skore;
     private int pocetTurnajov;
 
     private Image hviezda;
     private Image mec;
+    private Image experience;
 
     private Image miestoNaTrinket;
     private Image miestoNaVyzbroj;
@@ -46,7 +48,9 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
     private Text cenaText;
     private Text silaText;
     private Text popularitaText;
+    protected Text skusenostiText;
     private Text menoT;
+    protected String rankCheck;
     private int[] suradnice;
     private int[] suradniceTrinket;
     private int[] suradniceVyzbroj;
@@ -127,6 +131,8 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
 
         this.hviezda = new Image("Obrazky/star.png", suradnicaX + 126, suradnicaY + 191);
         this.mec = new Image("Obrazky/sword.png", suradnicaX + 40, suradnicaY + 191);
+        this.experience = new Image("Obrazky/skusenosti.png", suradnicaX + 12, suradnicaY + 12);
+
         this.miestoNaTrinket = new Image("Obrazky/amulet.png", suradnicaX + 16, suradnicaY + 232);
         this.suradniceTrinket = new int[]{suradnicaX + 16, suradnicaX + 56, suradnicaY + 232, suradnicaY + 272};
         this.miestoNaVyzbroj = new Image("Obrazky/armor.png", suradnicaX + 64, suradnicaY + 232);
@@ -134,22 +140,33 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
         if (this instanceof PokrocilyRytier pR) {
             pR.setMiestoNaTrinket2(new Image("Obrazky/amulet.png", suradnicaX + 112, suradnicaY + 232));
             pR.setSuradniceTrinket2(new int[]{suradnicaX + 112, suradnicaX + 152, suradnicaY + 232, suradnicaY + 272});
-            pR.setSchopnostObrazok(new Image(pR.getSchopnost().getObrazok(), suradnicaX + 16, suradnicaY + 16));
+            pR.setSchopnostObrazok(new Image(pR.getSchopnost().getObrazok(), suradnicaX + 170, suradnicaY + 16));
         }
         if (this instanceof LegendarnyRytier lR) {
+            if (lR.getMeno() == "Robin Hood") {
+                lR.setSchopnostObrazok(new Image(lR.getSchopnost().getObrazok(), suradnicaX + 170, suradnicaY + 12));
+            } else {
+                lR.setSchopnostObrazok(new Image(lR.getSchopnost().getObrazok(), suradnicaX + 170, suradnicaY + 16));
+            }
             lR.setMiestoNaVyzbroj2(new Image("Obrazky/armor.png", suradnicaX + 160, suradnicaY + 232));
             lR.setSuradniceVyzbroj2(new int[]{suradnicaX + 160, suradnicaX + 208, suradnicaY + 232, suradnicaY + 272});
-            lR.setSchopnostObrazok(new Image(lR.getSchopnost().getObrazok(), suradnicaX + 16, suradnicaY + 16));
+
         }
 
-        this.menoT = new Text(this.meno, suradnicaX + 60, suradnicaY + 40);
-        this.menoT.changeFont("New Rocker", FontStyle.BOLD, 22);
+        this.rankCheck = "";
+
+        this.menoT = new Text(this.meno, suradnicaX + 108 - this.meno.length() * 5, suradnicaY + 40);
+        this.menoT.changeFont("Langar", FontStyle.BOLD, 20);
 
         this.silaText = new Text("" + this.sila, suradnicaX + 75, suradnicaY + 210);
         this.silaText.changeFont("", FontStyle.BOLD, 20);
 
         this.popularitaText = new Text("" + this.popularita, suradnicaX + 164, suradnicaY + 210);
         this.popularitaText.changeFont("", FontStyle.BOLD, 20);
+
+        this.skusenostiText = new Text("" + this.skusenosti, suradnicaX + 27, suradnicaY + 37);
+        this.skusenostiText.changeFont("", FontStyle.BOLD, 20);
+        this.rankObrazok = new Image("Obrazky/placeHolder.png", this.suradnice[0] + 30, this.suradnice[2] + 48);
 
         if (prehlad) {
             this.vsetkyAkcie.add(new KupSa(this, mapa.getObchod()));
@@ -193,9 +210,11 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
         this.obrazok.makeVisible();
         this.hviezda.makeVisible();
         this.mec.makeVisible();
+        this.experience.makeVisible();
         this.menoT.makeVisible();
         this.silaText.makeVisible();
         this.popularitaText.makeVisible();
+        this.skusenostiText.makeVisible();
         this.miestoNaVyzbroj.makeVisible();
         this.miestoNaTrinket.makeVisible();
         if (this.cenaObrazok != null && this.cenaText != null) {
@@ -223,9 +242,11 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
         this.obrazok.makeInvisible();
         this.hviezda.makeInvisible();
         this.mec.makeInvisible();
+        this.experience.makeInvisible();
         this.menoT.makeInvisible();
         this.silaText.makeInvisible();
         this.popularitaText.makeInvisible();
+        this.skusenostiText.makeInvisible();
         this.miestoNaVyzbroj.makeInvisible();
         this.miestoNaTrinket.makeInvisible();
         if (this.cenaObrazok != null && this.cenaText != null) {
@@ -246,7 +267,7 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
 
     @Override
     public int getCena() {
-        int cena = this.getSila(null) * 2 + this.getPopularita(null) * 3 + 5;
+        int cena = this.getSila(null) * 2 + this.getPopularita(null) * 3 + 10;
         return cena;
     }
 
@@ -369,6 +390,11 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
 
     public void pridajSilu() {
         this.sila++;
+        if (this.hrac != null) {
+            if (this.hrac.getMapa().getEfekt() == Efekt.TIMOVA_PRACA) {
+                this.cviciskoVisits++;
+            }
+        }
         if (this.silaText != null) {
             this.silaText.makeInvisible();
             this.silaText.changeText("" + this.sila);
@@ -377,6 +403,11 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
     }
     public void pridajSilu(int pocet) {
         this.sila += pocet;
+        if (this.hrac != null) {
+            if (this.hrac.getMapa().getEfekt() == Efekt.TIMOVA_PRACA) {
+                this.cviciskoVisits += pocet;
+            }
+        }
         if (this.silaText != null) {
 
             this.silaText.makeInvisible();
@@ -404,26 +435,39 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
             this.popularitaText.makeVisible();
         }
     }
-    public void pridajSkusenost() {
+    public void pridajSkusenost(boolean moveTheText) {
         this.skusenosti++;
-        switch (this.skusenosti) {
-            case 1 -> {
-                this.rank = Rank.NOVICE;
-                this.rankObrazok = new Image("Obrazky/Novice.png", this.suradnice[0] + 175, this.suradnice[2] + 15);
-                this.rankObrazok.makeVisible();
+        if (this.skusenostiText != null) {
+            this.skusenostiText.makeInvisible();
+            this.skusenostiText.changeText("" + this.skusenosti);
+            if (moveTheText || this.skusenosti == 10) {
+                this.skusenostiText.moveHorizontal(-5);
             }
-            case 4 -> {
-                this.rank = Rank.JOURNEYMAN;
-                this.rankObrazok.changeImage("Obrazky/Journey.png");
-            }
-            case 9 -> {
-                this.rank = Rank.CHAMPION;
-                this.rankObrazok.changeImage("Obrazky/Champ.png");
-            }
-            case 14 -> {
-                this.rank = Rank.LEGEND;
-                this.rankObrazok.changeImage("Obrazky/Legend.png");
-            }
+            this.skusenostiText.makeVisible();
+        }
+        if (this.skusenosti >= 1 && this.skusenosti <= 3 && !this.rankCheck.equals("Novice")) {
+            this.rank = Rank.NOVICE;
+            this.rankObrazok.changeImage("Obrazky/Novice.png");
+            this.refreshImage();
+            this.rankCheck = "Novice";
+
+        } else if (this.skusenosti >= 4 && this.skusenosti <= 8 && !this.rankCheck.equals("JourneyMan")) {
+            this.rank = Rank.JOURNEYMAN;
+            this.rankObrazok.changeImage("Obrazky/Journey.png");
+            this.refreshImage();
+            this.rankCheck = "JourneyMan";
+
+        } else if (this.skusenosti >= 9 && this.skusenosti <= 13  && !this.rankCheck.equals("Champion")) {
+            this.rank = Rank.CHAMPION;
+            this.rankObrazok.changeImage("Obrazky/Champ.png");
+            this.refreshImage();
+            this.rankCheck = "Champion";
+
+        } else if (this.skusenosti >= 14  && !this.rankCheck.equals("Legend")) {
+            this.rank = Rank.LEGEND;
+            this.rankObrazok.changeImage("Obrazky/Legend.png");
+            this.refreshImage();
+            this.rankCheck = "Legend";
         }
     }
     public Rank getRank() {
@@ -527,6 +571,7 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
     public int getSkusenosti() {
         return this.skusenosti;
     }
+    public int getCviciskoVisits() {return this.cviciskoVisits;}
 
     public void vyrobPeniaze() {
         var suma = (this.getPopularita(this.hrac.getMapa().getArena()) * 4) + (this.getSila(this.hrac.getMapa().getArena()) * 3);
@@ -571,5 +616,19 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
     }
     public void zmenObrazok(String obrazokCesta) {
         this.obrazok.changeImage(obrazokCesta);
+    }
+
+    public void setSkusenost(int skusenost) {
+        this.skusenosti = skusenost - 1;
+        var move = false;
+        if (this.skusenosti >= 10) {
+            move = true;
+        }
+        this.pridajSkusenost(move);
+    }
+
+    public void refreshImage() {
+        this.obrazok.makeInvisible();
+        this.obrazok.makeVisible();
     }
 }

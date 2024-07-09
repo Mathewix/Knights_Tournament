@@ -27,10 +27,7 @@ public class LegendarnyRytier extends PokrocilyRytier{
             case "d'Artagnan" -> super.obrazokCesta = "Obrazky/Dartagnan.png";
         }
         this.vyzbroj2 = new MiestoNaPredmet<>();
-        if (this.schopnost == Schopnost.ZIJUCA_LEGENDA) {
-            this.pridajSkusenost(12);
-            this.rank = Rank.LEGEND;
-        }
+
 
     }
 
@@ -43,9 +40,8 @@ public class LegendarnyRytier extends PokrocilyRytier{
             if (prehlad) {
                 this.getVyzbroj2().get().skryKartu();
             }
-        } else if (this.schopnost == Schopnost.ZIJUCA_LEGENDA && zobraz) {
-            super.rankObrazok = new Image("Obrazky/Legend.png", this.getSuradnice()[0] + 175, this.getSuradnice()[2] + 15);
-            super.rankObrazok.makeVisible();
+        } else if (this.schopnost == Schopnost.ZIJUCA_LEGENDA) {
+            this.setSkusenost(12);
         }
     }
 
@@ -68,32 +64,39 @@ public class LegendarnyRytier extends PokrocilyRytier{
         this.miestoNaVyzbroj2 = miestoNaVyzbroj2;
     }
     @Override
-    public void pridajSkusenost() {
+    public void pridajSkusenost(boolean moveTheText) {
+        System.out.println(this.skusenosti);
         this.skusenosti++;
-        switch (this.skusenosti) {
-            case 1 -> {
-                this.rank = Rank.NOVICE;
-                super.rankObrazok = new Image("Obrazky/Novice.png", this.getSuradnice()[0] + 175, this.getSuradnice()[2] + 15);
-                super.rankObrazok.makeVisible();
+        if (this.skusenostiText != null) {
+            this.skusenostiText.makeInvisible();
+            this.skusenostiText.changeText("" + this.skusenosti);
+            if (moveTheText || this.skusenosti == 10) {
+                this.skusenostiText.moveHorizontal(-6);
             }
-            case 2 -> {
-                this.rank = Rank.JOURNEYMAN;
-                this.rankObrazok.changeImage("Obrazky/Journey.png");
-            }
-            case 4 -> {
-                this.rank = Rank.CHAMPION;
-                this.rankObrazok.changeImage("Obrazky/Champ.png");
-            }
-            case 7 -> {
-                this.rank = Rank.LEGEND;
-                this.rankObrazok.changeImage("Obrazky/Legend.png");
-            }
+            this.skusenostiText.makeVisible();
         }
-    }
+        if (this.skusenosti == 1) {
+            this.rank = Rank.NOVICE;
+            this.rankObrazok.changeImage("Obrazky/Novice.png");
+            this.refreshImage();
+            this.rankCheck = "Novice";
+        } else if (this.skusenosti == 2 || this.skusenosti == 3 && !this.rankCheck.equals("JourneyMan")) {
+            this.rank = Rank.JOURNEYMAN;
+            this.rankObrazok.changeImage("Obrazky/Journey.png");
+            this.refreshImage();
+            this.rankCheck = "JourneyMan";
+        } else if (this.skusenosti >= 4 && this.skusenosti <= 6 && !this.rankCheck.equals("Champion")) {
+            this.rank = Rank.CHAMPION;
+            this.rankObrazok.changeImage("Obrazky/Champ.png");
+            this.refreshImage();
+            this.rankCheck = "Champion";
+        } else if (this.skusenosti >= 7 && !this.rankCheck.equals("Legend")) {
+            this.rank = Rank.LEGEND;
+            this.rankObrazok.changeImage("Obrazky/Legend.png");
+            this.refreshImage();
+            this.rankCheck = "Legend";
+        }
 
-    @Override
-    public void pridajSkusenost(int pocet) {
-        this.skusenosti += pocet;
     }
 
     @Override
@@ -194,5 +197,13 @@ public class LegendarnyRytier extends PokrocilyRytier{
             }
             return false;
         }
+    }
+    public void setSkusenost(int skusenosti) {
+        this.skusenosti = skusenosti - 1;
+        var move = false;
+        if (this.skusenosti >= 10) {
+            move = true;
+        }
+        this.pridajSkusenost(move);
     }
 }

@@ -12,6 +12,7 @@ import Rytieri.PokrocilyRytier;
 import Rytieri.Rank;
 import Rytieri.Schopnsoti.Schopnost;
 import Zoznamy.ZoznamPredmetov;
+import fri.shapesge.Image;
 
 import java.util.Random;
 
@@ -24,6 +25,7 @@ public class Cech extends TreningoveMiesto implements Miesto{
     private final int MIN_Y = 160;
     private final int MAX_Y = this.MIN_Y + 90;
     private final ZoznamPredmetov zoznamPredmetov;
+
 
 
     public Cech(ManazerEventov manazerEventov, Hrac hrac) {
@@ -78,10 +80,15 @@ public class Cech extends TreningoveMiesto implements Miesto{
             if (this.getRytier() instanceof PokrocilyRytier pR) {
                 if (pR.getSchopnost() == Schopnost.DOBRODRUH) {
                     var r = new Random();
-                    if (r.nextDouble() >= 0.6) {
-                        pR.pridajPopularitu();
-                    } else {
-                        pR.pridajSilu();
+                    for (int i = 0; i < 3; i++) {
+                        var probability = r.nextDouble();
+                        if (probability <= 0.45) {
+                            pR.pridajPopularitu(1);
+                        } else if (probability <= 0.85){
+                            pR.pridajSilu(1);
+                        } else {
+                            pR.pridajSkusenost(false);
+                        }
                     }
                 }
             }
@@ -116,7 +123,12 @@ public class Cech extends TreningoveMiesto implements Miesto{
 
             }
             super.getHrac().pridajPredmet(predmet);
-            this.getRytier().pridajSkusenost();
+            this.getRytier().pridajSkusenost(false);
+            if (this.getManazerEventov().getMapa().getEfekt() == Efekt.NEZABUDNUTELNE_DOBRODRUZSTVO
+                    && this.getManazerEventov().getMapa().getStavEfektu() != StavEfektu.BEZ_NEVYHODY) {
+                this.getRytier().setSkusenost(0);
+            }
+
             if (this.getManazerEventov().getMapa().getEfekt() == Efekt.OSUDOVA_VYPRAVA && this.getManazerEventov().getMapa().getStavEfektu() != StavEfektu.BEZ_NEVYHODY) {
                 this.getRytier().setBolVCechu(true);
             }

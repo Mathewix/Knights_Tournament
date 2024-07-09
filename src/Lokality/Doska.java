@@ -13,8 +13,10 @@ public class Doska implements Miesto{
     private final Image obrazok;
     private final Image[] lokalitaRytierov;
     private final Image[] miestaRytierov;
+    private final Image lockedKnight;
     private Predmet nasadzuje;
-    private ManazerEventov manazerEventov;
+    private boolean unlocked;
+    //private ManazerEventov manazerEventov;
 
     public Doska(Hrac hrac) {
         this.hrac = hrac;
@@ -27,11 +29,11 @@ public class Doska implements Miesto{
         this.miestaRytierov[0] = new Image("Obrazky/miestoNaRytiera.png", 215, 690);
         this.miestaRytierov[1] = new Image("Obrazky/miestoNaRytiera.png", 515, 690);
         this.miestaRytierov[2] = new Image("Obrazky/miestoNaRytiera.png", 815, 690);
-
+        this.lockedKnight = new Image("Obrazky/Locked.png",815,690);
     }
-    public void setManazerEventov(ManazerEventov manazerEventov) {
+    /*public void setManazerEventov(ManazerEventov manazerEventov) {
         this.manazerEventov = manazerEventov;
-    }
+    }*/
     public void zobrazDosku() {
         this.obrazok.makeVisible();
         for (Image image : this.lokalitaRytierov) {
@@ -40,7 +42,7 @@ public class Doska implements Miesto{
         for (Image image : this.miestaRytierov) {
             image.makeVisible();
         }
-
+        this.lockedKnight.makeVisible();
     }
     public void zmenLokalituRytiera(int poradie, String lokalita) {
         this.lokalitaRytierov[poradie].makeInvisible();
@@ -67,5 +69,14 @@ public class Doska implements Miesto{
 
     public Hrac getHrac() {
         return this.hrac;
+    }
+
+    public boolean unlocked() {
+        return this.unlocked;
+    }
+
+    public void unlockThirdKnight() {
+        this.unlocked = true;
+        this.lockedKnight.makeInvisible();
     }
 }

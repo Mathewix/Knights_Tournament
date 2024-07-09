@@ -24,7 +24,7 @@ public class Obchod implements Miesto{
     private int cisloTovaru;
     private final Image ikona;
     private final Image pozadieObchodu;
-    private final Image zberatelskyObchod;
+    private final Image reroll;
     private final ZoznamRytierov zoznamRytierov;
     private final ZoznamPredmetov zoznamPredmetov;
 
@@ -46,8 +46,8 @@ public class Obchod implements Miesto{
         this.zoznamPredmetov = new ZoznamPredmetov();
         this.zoznamRytierov = new ZoznamRytierov();
         this.pozadieObchodu = new Image("Obrazky/PozadieObchodu.png",175,50);
-        this.ikona = new Image("Obrazky/Obchod.png",MIN_X + 100, MIN_Y + 20);
-        this.zberatelskyObchod = new Image("Obrazky/zberatelObchod.png", 503, 214);
+        this.ikona = new Image("Obrazky/Obchod.png",MIN_X + 100, MIN_Y - 30);
+        this.reroll = new Image("Obrazky/EffectReroll.png", 828, 450);
     }
 
     public int getCyklus() {
@@ -71,7 +71,7 @@ public class Obchod implements Miesto{
      * nastaví aký tovar sa dá hráčom kúpiť podľa cislaTovaru
      */
     public void nastavObchod() {
-        System.out.println(this.cisloTovaru);
+
         if (this.cisloTovaru == 0) {
             for (int i = 0; i < 6; i++) {
                 var predmet = this.zoznamPredmetov.dajNahodnuOdmenu();
@@ -286,7 +286,7 @@ public class Obchod implements Miesto{
         for (Predavatelne predavatelne : this.tovar) {
                 predavatelne.zobrazKartu();
         }
-
+        this.reroll.makeVisible();
     }
     public void skryObchod() {
         this.pozadieObchodu.makeInvisible();
@@ -296,7 +296,9 @@ public class Obchod implements Miesto{
                 k.skrySpravu();
             }
         }
+        this.reroll.makeInvisible();
     }
+
 
     /**
      * ManazerEventov pravidelne volá metódu a tým otvára a zatvára obchod a zmení číslo tovaru pri každom zatvorení
@@ -364,5 +366,22 @@ public class Obchod implements Miesto{
     public void vyprazdniTovar() {
         this.tovar = new ArrayList<>();
         this.zoznamPredmetov.dopln();
+    }
+
+    public void rerollShop() {
+        for (Predavatelne predavatelne : this.tovar) {
+            predavatelne.skryKartu();
+            for (KontextovaAkcia k : predavatelne.pouzitelneSpravy()) {
+                k.skrySpravu();
+            }
+        }
+        this.reroll.makeInvisible();
+        this.vyprazdniTovar();
+        this.nastavObchod();
+        this.vytvorTovar();
+        for (Predavatelne predavatelne : this.tovar) {
+            predavatelne.zobrazKartu();
+        }
+        this.reroll.makeVisible();
     }
 }

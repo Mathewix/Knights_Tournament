@@ -137,7 +137,7 @@ public class ManazerEventov implements MaAktivitu{
             }
 
         }
-        if (this.hodiny == 1350) {
+        if (this.hodiny == 1350) { //1350
             this.pozastavHru();
             this.efektyHry.zobrazMoznosti();
             this.mapa.setPredosli(this.mapa.getPohlad());

@@ -39,6 +39,8 @@ public class Arena implements Miesto{
     private ZoznamVyhier zoznamVyhier;
     private final int MAX_X = this.MIN_X + 195;
     private final int MAX_Y = this.MIN_Y + 180;
+    private int popularityBonus;
+    private Efekt efekt;
 
     public Arena(int cyklus, Hrac hrac) {
         this.cyklus = cyklus;
@@ -161,9 +163,9 @@ public class Arena implements Miesto{
             if (this.zoznamRytierov.size() >= 4) {
                 for (int i = 0; i < 4; i++) {
                     if (!this.zoznamRytierov.get(i).isTrenujeMaHrac()) {
-                        this.zoznamRytierov.get(i).pridajSkore(this.zoznamVyhier.odmenaZaKolo(this.cisloTurnaja, i) * 2, true, this.manazerEventov.getMapa().getEfekt());
+                        this.zoznamRytierov.get(i).pridajSkore(this.zoznamVyhier.odmenaZaKolo(this.cisloTurnaja, i) * 2, true, this.efekt);
                     } else {
-                        this.zoznamRytierov.get(i).pridajSkore(this.zoznamVyhier.odmenaZaKolo(this.cisloTurnaja, i), true, this.manazerEventov.getMapa().getEfekt());
+                        this.zoznamRytierov.get(i).pridajSkore(this.zoznamVyhier.odmenaZaKolo(this.cisloTurnaja, i), true, this.efekt);
                     }
                     this.menaRytierov.add(new Text(this.zoznamRytierov.get(i).getMeno(), 600, 304 + (i * 41)));
                     this.statyRytierov.add(new Text(this.zoznamRytierov.get(i).getSila(this) + " / " + this.zoznamRytierov.get(i).getPopularita(this), 735, 304 + (i * 41)));
@@ -173,9 +175,9 @@ public class Arena implements Miesto{
             } else {
                 for (int i = 0; i < this.zoznamRytierov.size(); i++) {
                     if (!this.zoznamRytierov.get(i).isTrenujeMaHrac()) {
-                        this.zoznamRytierov.get(i).pridajSkore(this.zoznamVyhier.odmenaZaKolo(this.cisloTurnaja, i) * 2, true, this.manazerEventov.getMapa().getEfekt());
+                        this.zoznamRytierov.get(i).pridajSkore(this.zoznamVyhier.odmenaZaKolo(this.cisloTurnaja, i) * 2, true, this.efekt);
                     } else {
-                        this.zoznamRytierov.get(i).pridajSkore(this.zoznamVyhier.odmenaZaKolo(this.cisloTurnaja, i), true, this.manazerEventov.getMapa().getEfekt());
+                        this.zoznamRytierov.get(i).pridajSkore(this.zoznamVyhier.odmenaZaKolo(this.cisloTurnaja, i), true, this.efekt);
                     }
                     this.menaRytierov.add(new Text(this.zoznamRytierov.get(i).getMeno(), 600, 304 + (i * 41)));
                     this.statyRytierov.add(new Text(this.zoznamRytierov.get(i).getSila(this) + " / " + this.zoznamRytierov.get(i).getPopularita(this), 735, 304 + (i * 41)));
@@ -185,15 +187,15 @@ public class Arena implements Miesto{
             }
             for (ObycajnyRytier r: this.zoznamRytierov) {
                 if (!r.isTrenujeMaHrac()) {
-                    r.pridajSkore(r.getPopularita(arena) * (5 * this.manazerEventov.getFazaHry()), true, this.manazerEventov.getMapa().getEfekt());
+                    r.pridajSkore(r.getPopularita(arena) * (5 * this.manazerEventov.getFazaHry()), true, this.efekt);
                 } else if (r.isTrenujeMaHrac()) {
-                    r.pridajSkore(r.getPopularita(arena) * (5 + (this.manazerEventov.getFazaHry())), true, this.manazerEventov.getMapa().getEfekt());
+                    r.pridajSkore(r.getPopularita(arena) * (5 + (this.manazerEventov.getFazaHry()) + this.popularityBonus), true, this.efekt);
                 }
                 if (r instanceof LegendarnyRytier lR && lR.getSchopnost() == Schopnost.ANGLICKY_KOMUNIZMUS) {
                     for (ObycajnyRytier rytier : vyhrali) {
-                        rytier.pridajSkore(-(r.getPopularita(this) * 3), true, this.manazerEventov.getMapa().getEfekt());
+                        rytier.pridajSkore(-(r.getPopularita(this) * 3), true, this.efekt);
                     }
-                    lR.pridajSkore(r.getPopularita(this) * 8, true, this.manazerEventov.getMapa().getEfekt());
+                    lR.pridajSkore(r.getPopularita(this) * (8 + this.popularityBonus), true, this.efekt);
                 } else if (r instanceof LegendarnyRytier lR && lR.getSchopnost() == Schopnost.BOZI_BOJOVNIK) {
                     lR.pridajPocetTurnajov();
                 }
@@ -203,11 +205,11 @@ public class Arena implements Miesto{
                 text.changeFont("Langar", FontStyle.PLAIN, 22);
                 text.makeVisible();
             }
-            if (this.manazerEventov.getMapa().getEfekt() == Efekt.KRATKODOBA_INVESTICIA && this.manazerEventov.getMapa().getStavEfektu() != StavEfektu.BEZ_NEVYHODY) {
+            if (this.efekt == Efekt.KRATKODOBA_INVESTICIA && this.manazerEventov.getMapa().getStavEfektu() != StavEfektu.BEZ_NEVYHODY) {
                 for (ObycajnyRytier obycajnyRytier : this.zoznamRytierov) {
                     obycajnyRytier.pridajPocetTurnajov();
                 }
-            } else if (this.manazerEventov.getMapa().getEfekt() == Efekt.ADRENALIN && this.manazerEventov.getMapa().getStavEfektu() != StavEfektu.BEZ_NEVYHODY) {
+            } else if (this.efekt == Efekt.ADRENALIN && this.manazerEventov.getMapa().getStavEfektu() != StavEfektu.BEZ_NEVYHODY) {
                 for (ObycajnyRytier obycajnyRytier : this.zoznamRytierov) {
                     if (obycajnyRytier.getHrac() != null) {
                         obycajnyRytier.pridajSilu(-1);
@@ -254,7 +256,7 @@ public class Arena implements Miesto{
         if (ukoncene && rytier == null) {
             for (ObycajnyRytier r : this.zoznamRytierov) {
                 if (r instanceof PokrocilyRytier pR && pR.getSchopnost() == Schopnost.GLADIATOR && pR.getSchopnost() == Schopnost.JEDEN_ZA_VSETKYCH) {
-                    pR.pridajSilu();
+                    pR.pridajSilu(2);
                     pR.pridajPopularitu();
                 }
                 if (r.isTrenujeMaHrac()) {
@@ -301,4 +303,12 @@ public class Arena implements Miesto{
         return zoznamVyhier;
     }
 
+
+
+    public void setEfekt(Efekt efekt) {
+        this.efekt = efekt;
+        if (efekt == Efekt.SLAVNOSTI) {
+            this.popularityBonus = 3;
+        }
+    }
 }

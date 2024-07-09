@@ -28,11 +28,7 @@ public class Krcma extends TreningoveMiesto implements Miesto{
 
     @Override
     public int getDobaTrvania(MaAktivitu maAktivitu) {
-        if (super.getManazerEventov().getMapa().getEfekt() != Efekt.TIMOVA_PRACA) {
-            return getDobaTrvaniaKrcma();
-        } else {
-            return getDobaTrvaniaCvicisko();
-        }
+        return getDobaTrvaniaKrcma();
     }
 
 
