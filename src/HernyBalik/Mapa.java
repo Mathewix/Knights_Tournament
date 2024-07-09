@@ -100,6 +100,7 @@ public class Mapa {
         miesta.add(this.cvicisko3);
         this.manazerEventov.zapniHru();
         this.manazerEventov.pozastavHru();
+        this.manazerEventov.showTime();
         this.stavEfektu = StavEfektu.PRAZDNE;
     }
 

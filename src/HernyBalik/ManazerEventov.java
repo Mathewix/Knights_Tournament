@@ -54,7 +54,7 @@ public class ManazerEventov implements MaAktivitu{
         this.aktivity.put(dlzkaHry, toto);
         this.cas = new Text("", 40, 40);
         this.cas.changeFont("", FontStyle.BOLD, 30);
-        this.cas.changeColor("#FFFDF4");
+        this.cas.changeColor("#F4F4E3");
         this.spusteneObrazok = new Image("Obrazky/play.png", 142, 12);
         this.spusteneObrazok.makeVisible();
     }
@@ -87,10 +87,7 @@ public class ManazerEventov implements MaAktivitu{
             this.zmenStavObchodu();
         }
         this.novaFazaHry();
-        if (this.hodiny == 1) {
-            this.cas.changeText( "00 : 00" );
-            this.cas.makeVisible();
-        }
+
         if (this.hodiny % 10 == 0) {
             this.vykonajAkciuVeze();
             this.cas();
@@ -379,5 +376,9 @@ public class ManazerEventov implements MaAktivitu{
 
     public void setVeza(StraznaVeza veza) {
         this.veza = veza;
+    }
+    public void showTime() {
+        this.cas.changeText( "00 : 00" );
+        this.cas.makeVisible();
     }
 }

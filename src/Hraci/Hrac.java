@@ -29,16 +29,21 @@ public class Hrac implements Hodnotitelne {
     private int peniaze;
     private Text peniazeT;
     private final Image peniazeObrazok;
+    private int rerolls;
+    private Text rerollT;
+    private final Image rerollIcon;
     private final Doska doska;
     private Mapa mapa;
     private ManazerEventov manazerEventov;
     private int bonus;
+
 
     /**
      * V konštruktore sa nastaví doska na ktorej má hráč svoje veci v priebehu hry
      * @param peniaze - začiatočná suma peňazí, kt. hráč vlastní
      */
     public Hrac(int peniaze) {
+        this.rerolls = 5;
         this.inventar = new Predmet[16];
         this.inventarObrazky = new Image[16];
         this.miestoInventar = 16;
@@ -51,13 +56,16 @@ public class Hrac implements Hodnotitelne {
 
         this.rytieri = new ObycajnyRytier[3];
         this.peniaze = peniaze;
-        this.peniazeObrazok = new Image("Obrazky/coin.png", 40, 690);
+        this.peniazeObrazok = new Image("Obrazky/coin.png", 32, 690);
 
         var dlzkaPenazi ="" +  this.peniaze;
-        this.peniazeT = new Text("" + this.peniaze,110 - 5 * dlzkaPenazi.length() , 725);
-        this.peniazeT.changeFont("Palatino Linotype" + this.peniaze, FontStyle.BOLD, 30);
-        this.peniazeT.changeColor("#FFFDF4");
-
+        this.peniazeT = new Text("" + this.peniaze,110 - 4 * dlzkaPenazi.length() , 725);
+        this.peniazeT.changeFont("",FontStyle.BOLD ,32);
+        this.peniazeT.changeColor("#F4F4E3");
+        this.rerollT = new Text("" + this.rerolls, 1080,735);
+        this.rerollT.changeFont("", FontStyle.BOLD, 36);
+        this.rerollT.changeColor("#F4F4E3");
+        this.rerollIcon = new Image("Obrazky/Rerollicon.png",1120, 690);
 
         this.doska = new Doska(this);
     }
@@ -73,8 +81,8 @@ public class Hrac implements Hodnotitelne {
         this.peniazeT.makeInvisible();
         var dlzkaPenazi ="" +  this.peniaze;
         this.peniazeT = new Text("" + this.peniaze,110 - 5 * dlzkaPenazi.length() , 725);
-        this.peniazeT.changeFont("Palatino Linotype" + this.peniaze, FontStyle.BOLD, 30);
-        this.peniazeT.changeColor("#FFFDF4");
+        this.peniazeT.changeFont("" + this.peniaze, FontStyle.BOLD, 30);
+        this.peniazeT.changeColor("#F4F4E3");
         this.peniazeT.makeVisible();
         return true;
         } else {
@@ -351,8 +359,6 @@ public class Hrac implements Hodnotitelne {
                 if (!this.rytieri[i].getTrinket().isEmpty()) {
                     if (this.miestoInventar != 0 ) {
                         this.rytieri[i].zlozPredmet(this.rytieri[i].getTrinket().get());
-                    } else {
-
                     }
 
                 }
@@ -395,6 +401,8 @@ public class Hrac implements Hodnotitelne {
         this.inventarIkona.makeVisible();
         this.peniazeObrazok.makeVisible();
         this.peniazeT.makeVisible();
+        this.rerollT.makeVisible();
+        this.rerollIcon.makeVisible();
         this.zobrazInventar();
     }
 
@@ -434,5 +442,15 @@ public class Hrac implements Hodnotitelne {
 
     public int getInventorySpace() {
         return this.miestoInventar;
+    }
+
+    public int getRerolls() {
+        return this.rerolls;
+    }
+    public void changeNumberOfRerolls(int amount) {
+        this.rerolls += amount;
+        this.rerollT.makeInvisible();
+        this.rerollT.changeText("" + this.rerolls);
+        this.rerollT.makeVisible();
     }
 }

@@ -9,6 +9,7 @@ import Zoznamy.ZoznamPredmetov;
 import Zoznamy.ZoznamRytierov;
 import fri.shapesge.Image;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -369,19 +370,25 @@ public class Obchod implements Miesto{
     }
 
     public void rerollShop() {
-        for (Predavatelne predavatelne : this.tovar) {
-            predavatelne.skryKartu();
-            for (KontextovaAkcia k : predavatelne.pouzitelneSpravy()) {
-                k.skrySpravu();
+        if (this.mapa.getHrac().getRerolls() != 0) {
+            for (Predavatelne predavatelne : this.tovar) {
+                predavatelne.skryKartu();
+                for (KontextovaAkcia k : predavatelne.pouzitelneSpravy()) {
+                    k.skrySpravu();
+                }
             }
+            this.reroll.makeInvisible();
+            this.vyprazdniTovar();
+            this.nastavObchod();
+            this.vytvorTovar();
+            for (Predavatelne predavatelne : this.tovar) {
+                predavatelne.zobrazKartu();
+            }
+            this.reroll.makeVisible();
+            this.mapa.getHrac().changeNumberOfRerolls(-1);
+        } else {
+            this.mapa.getHrac().getManazerEventov().pozastavHru();
+            JOptionPane.showMessageDialog(null, "Došli ti rerolli.", "Chyba", JOptionPane.ERROR_MESSAGE);
         }
-        this.reroll.makeInvisible();
-        this.vyprazdniTovar();
-        this.nastavObchod();
-        this.vytvorTovar();
-        for (Predavatelne predavatelne : this.tovar) {
-            predavatelne.zobrazKartu();
-        }
-        this.reroll.makeVisible();
     }
 }
