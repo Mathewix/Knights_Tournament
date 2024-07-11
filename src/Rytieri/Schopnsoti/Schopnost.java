@@ -25,11 +25,11 @@ public enum Schopnost {
     GLADIATOR("Obrazky/gladiator.png", 55),
     // nahodne prida rytierovi silu/popularitu/skusenost(mala sanca) 3-krat po každom ukončení výpravy v Cechu
     DOBRODRUH("Obrazky/dobrodruh.png", 50),
-    EXKALIBER("Obrazky/Artus.png", 438),
-    JEDEN_ZA_VSETKYCH("Obrazky/Darta.png", 453),
-    ZIJUCA_LEGENDA("Obrazky/Hanibal.png", 414),
-    ANGLICKY_KOMUNIZMUS("Obrazky/Robin.png", 430),
-    BOZI_BOJOVNIK("Obrazky/Joan.png", 485);
+    EXKALIBER("Obrazky/Artus.png", 434),
+    JEDEN_ZA_VSETKYCH("Obrazky/Darta.png", 448),
+    ZIJUCA_LEGENDA("Obrazky/Hanibal.png", 409),
+    ANGLICKY_KOMUNIZMUS("Obrazky/Robin.png", 425),
+    BOZI_BOJOVNIK("Obrazky/Joan.png", 480);
     private final String obrazok;
     private final int cena;
 

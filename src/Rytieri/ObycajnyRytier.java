@@ -23,7 +23,7 @@ import java.util.Random;
  */
 public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
 
-    private Image ikona;
+    protected Image ikona;
     private Miesto umiestnenie;
     private final String meno;
     protected int sila;
@@ -48,7 +48,7 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
     private Text cenaText;
     private Text silaText;
     private Text popularitaText;
-    protected Text skusenostiText;
+    private Text skusenostiText;
     private Text menoT;
     protected String rankCheck;
     private int[] suradnice;
@@ -170,6 +170,7 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
 
         if (prehlad) {
             this.vsetkyAkcie.add(new KupSa(this, mapa.getObchod()));
+            this.rankObrazok = new Image("Obrazky/placeHolder.png", this.suradnice[0] + 30, this.suradnice[2] + 48);
             this.cenaObrazok = new Image("Obrazky/cena.png", suradnicaX + 75, suradnicaY + 300);
             var cena = "";
             if (mapa.getEfekt() != Efekt.OBCHODNIK) {
@@ -207,6 +208,9 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
     public void zobrazKartu() {
         this.rarita.makeVisible();
         this.pozadie.makeVisible();
+        if (this.rankObrazok != null) {
+            this.rankObrazok.makeVisible();
+        }
         this.obrazok.makeVisible();
         this.hviezda.makeVisible();
         this.mec.makeVisible();
@@ -221,13 +225,8 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
             this.cenaObrazok.makeVisible();
             this.cenaText.makeVisible();
         }
-        if (this.rankObrazok != null) {
-            this.rankObrazok.makeVisible();
-        }
-        if (this instanceof PokrocilyRytier pR) {
-            pR.getMiestoNaTrinket2().makeVisible();
-            pR.getSchopnostObrazok().makeVisible();
-        }
+
+
         if (this instanceof LegendarnyRytier lR) {
             lR.getMiestoNaVyzbroj2().makeVisible();
         }
@@ -267,7 +266,7 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
 
     @Override
     public int getCena() {
-        int cena = this.getSila(null) * 2 + this.getPopularita(null) * 3 + 10;
+        int cena = this.getSila(null) * 2 + this.getPopularita(null) * 3 + 5;
         return cena;
     }
 
@@ -374,13 +373,8 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
         } else {
             this.oddychuje = false;
             if (this.isTrenujeMaHrac()) {
-                if (miesto instanceof Arena) {
-                    this.ikona.moveVertical(miesto.getSuradnice()[3] - 84);
-                    this.ikona.moveHorizontal(miesto.getSuradnice()[0] + 60);
-                } else {
-                    this.ikona.moveVertical(miesto.getSuradnice()[3] - 75);
-                    this.ikona.moveHorizontal(miesto.getSuradnice()[0]);
-                }
+                this.ikona.moveVertical(miesto.getSuradniceIkona()[1]);
+                this.ikona.moveHorizontal(miesto.getSuradniceIkona()[0]);
                 this.hrac.premiestniRytiera(this, miesto);
                 this.zobrazIkonuRytiera();
             }
@@ -444,6 +438,9 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
                 this.skusenostiText.moveHorizontal(-5);
             }
             this.skusenostiText.makeVisible();
+            if (this.umiestnenie instanceof Obchod) {
+                this.skusenostiText.makeInvisible();
+            }
         }
         if (this.skusenosti >= 1 && this.skusenosti <= 3 && !this.rankCheck.equals("Novice")) {
             this.rank = Rank.NOVICE;
@@ -619,16 +616,20 @@ public class ObycajnyRytier implements Predavatelne, Hodnotitelne {
     }
 
     public void setSkusenost(int skusenost) {
+        this.rankCheck = "";
         this.skusenosti = skusenost - 1;
-        var move = false;
-        if (this.skusenosti >= 10) {
-            move = true;
-        }
+        var move = this.skusenosti >= 10;
         this.pridajSkusenost(move);
     }
 
     public void refreshImage() {
-        this.obrazok.makeInvisible();
-        this.obrazok.makeVisible();
+        if (!(this.umiestnenie instanceof Obchod)) {
+            this.obrazok.makeInvisible();
+            this.obrazok.makeVisible();
+        }
+    }
+
+    public Text getSkusenostiText() {
+        return this.skusenostiText;
     }
 }

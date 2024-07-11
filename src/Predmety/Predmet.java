@@ -178,7 +178,7 @@ public abstract class Predmet implements Predavatelne {
 
     @Override
     public int getCena() {
-        return this.cena + this.getHodnota() + (this.vylepsenia * 2);
+        return this.cena + this.getHodnota() + (this.vylepsenia * 4);
     }
     public int[] getSuradnice() {
         return this.suradnice;

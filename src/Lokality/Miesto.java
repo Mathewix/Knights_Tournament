@@ -10,4 +10,5 @@ public interface Miesto {
     void vratRytierov(boolean ukoncene, ObycajnyRytier rytier);
 
     int[] getSuradnice();
+    int[] getSuradniceIkona();
 }

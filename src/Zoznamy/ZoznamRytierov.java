@@ -68,6 +68,7 @@ public class ZoznamRytierov {
      */
     public ObycajnyRytier getNahodnyRytier() {
         Random r = new Random();
+
         var nahodnyRytier = this.zoznam.get(r.nextInt(0, this.zoznam.size()));
         this.zoznam.remove(nahodnyRytier);
         if (this.zoznam.isEmpty()) {
@@ -84,24 +85,22 @@ public class ZoznamRytierov {
         Random r = new Random();
         var nahodnyRytier = this.pokrocilyZoznam.get(r.nextInt(0, this.pokrocilyZoznam.size()));
         this.pokrocilyZoznam.remove(nahodnyRytier);
-        if (this.zoznam.isEmpty()) {
+        if (this.pokrocilyZoznam.isEmpty()) {
             this.refillKnights(1);
         }
         return nahodnyRytier;
     }
     public ObycajnyRytier getNahodnyLegendarnyRytier() {
         Random r = new Random();
+
         var nahodnyRytier = this.legendarnyZoznam.get(r.nextInt(0, this.legendarnyZoznam.size()));
         this.legendarnyZoznam.remove(nahodnyRytier);
-        if (this.zoznam.isEmpty()) {
+        if (this.legendarnyZoznam.isEmpty()) {
             this.refillKnights(2);
         }
         return nahodnyRytier;
     }
 
-    /** public void vratRytiera(ObycajnyRytier obycajnyRytier) {
-        this.zoznam.add(obycajnyRytier);
-    }
-     */
+
 
 }

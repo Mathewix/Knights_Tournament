@@ -59,6 +59,11 @@ public class Doska implements Miesto{
         return new int[]{0, 1200, 650, 1000};
     }
 
+    @Override
+    public int[] getSuradniceIkona() {
+        return new int[0];
+    }
+
     public void nastavujePredmet(Predmet p) {
         this.nasadzuje = p;
     }

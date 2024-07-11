@@ -37,8 +37,12 @@ public class Cech extends TreningoveMiesto implements Miesto{
 
 
     public int[] getSuradnice() {
-        var suradnice = new int[]{this.MIN_X, this.MAX_X, this.MIN_Y, this.MAX_Y};
-        return suradnice;
+        return new int[]{this.MIN_X, this.MAX_X, this.MIN_Y, this.MAX_Y};
+    }
+
+    @Override
+    public int[] getSuradniceIkona() {
+        return new int[]{this.MIN_X, this.MAX_Y - 75};
     }
 
     @Override

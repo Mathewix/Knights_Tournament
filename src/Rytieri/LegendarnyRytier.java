@@ -1,6 +1,7 @@
 package Rytieri;
 
 import HernyBalik.Mapa;
+import Lokality.Obchod;
 import Predmety.MiestoNaPredmet;
 import Predmety.Vyzbroj;
 import Rytieri.Schopnsoti.Schopnost;
@@ -15,6 +16,7 @@ public class LegendarnyRytier extends PokrocilyRytier{
     private final Schopnost schopnost;
     private int pocetTurnajov;
     private int[] suradniceVyzbroj2;
+    private String IconName;
 
     public LegendarnyRytier(String meno, Schopnost schopnost, int sila, int popularita) {
         super(meno, schopnost, sila, popularita);
@@ -23,11 +25,11 @@ public class LegendarnyRytier extends PokrocilyRytier{
             case "Robin Hood" -> super.obrazokCesta = "Obrazky/RobinHood.png";
             case "Jean d'Arc" -> super.obrazokCesta = "Obrazky/JoanOfArc.png";
             case "Hannibal" -> super.obrazokCesta = "Obrazky/HannibalBarca.png";
-            case "King Arthur" -> super.obrazokCesta = "Obrazky/KingArthur.png";
+            case "K. Arthur" -> super.obrazokCesta = "Obrazky/KingArthur.png";
             case "d'Artagnan" -> super.obrazokCesta = "Obrazky/Dartagnan.png";
         }
         this.vyzbroj2 = new MiestoNaPredmet<>();
-
+        this.IconName = "Obrazky/" + this.getMeno() + ".png";
 
     }
 
@@ -44,7 +46,10 @@ public class LegendarnyRytier extends PokrocilyRytier{
             this.setSkusenost(12);
         }
     }
-
+    public void skryIkonuRytiera() {
+        this.ikona.makeInvisible();
+        this.ikona = new Image(this.IconName,0,0);
+    }
     private void nasadExcalibur() {
         var excalibur = new Excalibur();
         excalibur.nasadNaRytiera(this);
@@ -67,13 +72,17 @@ public class LegendarnyRytier extends PokrocilyRytier{
     public void pridajSkusenost(boolean moveTheText) {
         System.out.println(this.skusenosti);
         this.skusenosti++;
-        if (this.skusenostiText != null) {
-            this.skusenostiText.makeInvisible();
-            this.skusenostiText.changeText("" + this.skusenosti);
+        var sText = this.getSkusenostiText();
+        if (sText != null) {
+            sText.makeInvisible();
+            sText.changeText("" + this.skusenosti);
             if (moveTheText || this.skusenosti == 10) {
-                this.skusenostiText.moveHorizontal(-6);
+                sText.moveHorizontal(-6);
             }
-            this.skusenostiText.makeVisible();
+            sText.makeVisible();
+            if (this.getUmiestnenie() instanceof Obchod) {
+                sText.makeInvisible();
+            }
         }
         if (this.skusenosti == 1) {
             this.rank = Rank.NOVICE;
@@ -154,6 +163,7 @@ public class LegendarnyRytier extends PokrocilyRytier{
                 this.pridajPopularitu(this.popularita);
                 this.pridajSilu(this.sila);
                 this.zmenObrazok("Obrazky/JoanOfArc2.png");
+                this.IconName = this.IconName = "Obrazky/" + this.getMeno() + "2.png";
             } else {
                 super.pridajPocetTurnajov();
             }
@@ -199,11 +209,9 @@ public class LegendarnyRytier extends PokrocilyRytier{
         }
     }
     public void setSkusenost(int skusenosti) {
+        this.rankCheck = "";
         this.skusenosti = skusenosti - 1;
-        var move = false;
-        if (this.skusenosti >= 10) {
-            move = true;
-        }
+        var move = this.skusenosti >= 10;
         this.pridajSkusenost(move);
     }
 }

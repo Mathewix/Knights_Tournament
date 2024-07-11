@@ -23,7 +23,8 @@ import fri.shapesge.Text;
 public class Arena implements Miesto{
     private final ArrayList<ObycajnyRytier> zoznamRytierov;
     private final ZoznamSuperovVArene superi;
-    private int cyklus;
+    private final int cyklus;
+    private int numberOfPlayerKnights;
     private int cisloTurnaja;
     private StavAreny stav;
     private final Image otvorena;
@@ -77,6 +78,7 @@ public class Arena implements Miesto{
             if (!this.zoznamRytierov.contains(rytier)) {
                 this.zoznamRytierov.add(rytier);
                 rytier.zmenUmiestnenie(this);
+                this.numberOfPlayerKnights++;
             }
 
         } else {
@@ -217,6 +219,7 @@ public class Arena implements Miesto{
                     }
                 }
             }
+            this.numberOfPlayerKnights = 0;
             this.cisloTurnaja++;
         }
     }
@@ -268,15 +271,19 @@ public class Arena implements Miesto{
         } else {
             rytier.zmenUmiestnenie(this.hrac.getDoska());
             this.zoznamRytierov.remove(rytier);
-
+            this.numberOfPlayerKnights--;
         }
     }
 
 
     @Override
     public int[] getSuradnice() {
-        var suradnice = new int[]{this.MIN_X, this.MAX_X, this.MIN_Y, this.MAX_Y};
-        return suradnice;
+        return new int[]{this.MIN_X, this.MAX_X, this.MIN_Y, this.MAX_Y};
+    }
+
+    @Override
+    public int[] getSuradniceIkona() {
+        return new int[]{this.MIN_X + 60 + 20*this.numberOfPlayerKnights, this.MAX_Y - 84};
     }
 
     /**

@@ -3,6 +3,7 @@ package Rytieri;
 import HernyBalik.Mapa;
 import Lokality.Arena;
 import Lokality.Miesto;
+import Lokality.Obchod;
 import Predmety.MiestoNaPredmet;
 import Predmety.Trinket;
 import Rytieri.Schopnsoti.Schopnost;
@@ -73,13 +74,17 @@ public class PokrocilyRytier extends ObycajnyRytier{
     @Override
     public void pridajSkusenost(boolean moveTheText) {
         this.skusenosti++;
-        if (this.skusenostiText != null) {
-            this.skusenostiText.makeInvisible();
-            this.skusenostiText.changeText("" + this.skusenosti);
+        var sText = this.getSkusenostiText();
+        if (sText != null) {
+            sText.makeInvisible();
+            sText.changeText("" + this.skusenosti);
             if (moveTheText || this.skusenosti == 10) {
-                this.skusenostiText.moveHorizontal(-6);
+                sText.moveHorizontal(-6);
             }
-            this.skusenostiText.makeVisible();
+            sText.makeVisible();
+            if (this.getUmiestnenie() instanceof Obchod) {
+                sText.makeInvisible();
+            }
         }
         if (this.skusenosti >= 1 && this.skusenosti <= 2 && !this.rankCheck.equals("Novice")) {
             this.rank = Rank.NOVICE;
@@ -167,5 +172,20 @@ public class PokrocilyRytier extends ObycajnyRytier{
 
     public Image getSchopnostObrazok() {
         return this.schopnostObrazok;
+    }
+
+    public void setSkusenost(int skusenosti) {
+        this.rankCheck = "";
+        this.skusenosti = skusenosti - 1;
+        var move = this.skusenosti >= 10;
+        this.getSkusenostiText().makeVisible();
+        this.getSkusenostiText().makeInvisible();
+        this.pridajSkusenost(move);
+    }
+
+    public void zobrazKartu() {
+        super.zobrazKartu();
+        this.miestoNaTrinket2.makeVisible();
+        this.schopnostObrazok.makeVisible();
     }
 }

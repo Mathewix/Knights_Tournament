@@ -3,7 +3,9 @@ package Lokality;
 import HernyBalik.*;
 import Hraci.Hrac;
 import Predmety.Predmet;
+import Rytieri.LegendarnyRytier;
 import Rytieri.ObycajnyRytier;
+import Rytieri.PokrocilyRytier;
 import Rytieri.SpravyRytierovi.KontextovaAkcia;
 import Zoznamy.ZoznamPredmetov;
 import Zoznamy.ZoznamRytierov;
@@ -97,7 +99,7 @@ public class Obchod implements Miesto{
         Random r  = new Random();
             for (int i = 0; i < 6; i++) {
                 var predmet = this.zoznamPredmetov.dajNahodnuOdmenu();
-                for (int j = 0; j < r.nextInt(0, (this.cisloTovaru) - 1); j++) {
+                for (int j = 0; j < r.nextInt(0, (this.cisloTovaru)); j++) {
                     if (j < 5) {
                         predmet.vylepsiPredmet();
                     }
@@ -105,19 +107,23 @@ public class Obchod implements Miesto{
                 this.tovar.add(predmet);
             }
     }
+    private void powerUpKnight(ObycajnyRytier rytier, Random r) {
+
+        for (int j = 0; j < 2 * this.cisloTovaru; j++) {
+            if (r.nextInt() <= 0.5) {
+                rytier.pridajSilu();
+            } else {
+                rytier.pridajPopularitu();
+            }
+        }
+    }
     private void nastavRytierov() {
         var r = new Random();
         switch (this.cisloTovaru) {
             case 1 -> {
                 for (int i = 0; i < 3; i++) {
                     var rytier = this.zoznamRytierov.getNahodnyRytier();
-                    for (int j = 0; j < 2 * this.cisloTovaru; j++) {
-                        if (r.nextInt() <= 0.5) {
-                            rytier.pridajSilu();
-                        } else {
-                            rytier.pridajPopularitu();
-                        }
-                    }
+                    this.powerUpKnight(rytier, r);
                     this.tovar.add(rytier);
                 }
             }
@@ -125,13 +131,7 @@ public class Obchod implements Miesto{
                 if (this.getMapa().getEfekt() != Efekt.VETERANSKY_TRENING || (this.getMapa().getEfekt() == Efekt.VETERANSKY_TRENING && this.getMapa().getStavEfektu() == StavEfektu.BEZ_NEVYHODY)) {
                     for (int i = 0; i < 2; i++) {
                         var rytier = this.zoznamRytierov.getNahodnyRytier();
-                        for (int j = 0; j < 2 * this.cisloTovaru; j++) {
-                            if (r.nextInt() <= 0.5) {
-                                rytier.pridajSilu();
-                            } else {
-                                rytier.pridajPopularitu();
-                            }
-                        }
+                        this.powerUpKnight(rytier, r);
                         this.tovar.add(rytier);
                     }
                     var rytier = this.zoznamRytierov.getNahodnyPokrociliRytier();
@@ -145,26 +145,14 @@ public class Obchod implements Miesto{
                     this.tovar.add(rytier);
                 } else {
                     var rytier = this.zoznamRytierov.getNahodnyRytier();
-                    for (int j = 0; j < 2 * this.cisloTovaru; j++) {
-                        if (r.nextInt() <= 0.5) {
-                            rytier.pridajSilu();
-                        } else {
-                            rytier.pridajPopularitu();
-                        }
-                    }
+                    this.powerUpKnight(rytier, r);
                     this.tovar.add(rytier);
                 }
             }
             case 5 -> {
                 if (this.getMapa().getEfekt() != Efekt.VETERANSKY_TRENING || (this.getMapa().getEfekt() == Efekt.VETERANSKY_TRENING && this.getMapa().getStavEfektu() == StavEfektu.BEZ_NEVYHODY)) {
                     var rytier = this.zoznamRytierov.getNahodnyRytier();
-                    for (int j = 0; j < 2 * this.cisloTovaru; j++) {
-                        if (r.nextInt() <= 0.5) {
-                            rytier.pridajSilu();
-                        } else {
-                            rytier.pridajPopularitu();
-                        }
-                    }
+                    this.powerUpKnight(rytier, r);
                     this.tovar.add(rytier);
                     for (int i = 0; i < 2; i++) {
                         var ryzzier = this.zoznamRytierov.getNahodnyPokrociliRytier();
@@ -179,13 +167,7 @@ public class Obchod implements Miesto{
                     }
                 } else {
                     var rytier = this.zoznamRytierov.getNahodnyPokrociliRytier();
-                    for (int j = 0; j < 2 * this.cisloTovaru; j++) {
-                        if (r.nextInt() <= 0.5) {
-                            rytier.pridajSilu();
-                        } else {
-                            rytier.pridajPopularitu();
-                        }
-                    }
+                    this.powerUpKnight(rytier, r);
                     this.tovar.add(rytier);
                 }
             }
@@ -193,13 +175,7 @@ public class Obchod implements Miesto{
                 if (this.getMapa().getEfekt() != Efekt.VETERANSKY_TRENING || (this.getMapa().getEfekt() == Efekt.VETERANSKY_TRENING && this.getMapa().getStavEfektu() == StavEfektu.BEZ_NEVYHODY)) {
                     for (int i = 0; i < 2; i++) {
                         var rytier = this.zoznamRytierov.getNahodnyPokrociliRytier();
-                        for (int j = 0; j < 2 * this.cisloTovaru; j++) {
-                            if (r.nextInt() <= 0.5) {
-                                rytier.pridajSilu();
-                            } else {
-                                rytier.pridajPopularitu();
-                            }
-                        }
+                        this.powerUpKnight(rytier, r);
                         this.tovar.add(rytier);
                     }
                     this.tovar.add(this.zoznamRytierov.getNahodnyLegendarnyRytier());
@@ -210,13 +186,7 @@ public class Obchod implements Miesto{
             case 8 -> {
                 if (this.getMapa().getEfekt() != Efekt.VETERANSKY_TRENING  || (this.getMapa().getEfekt() == Efekt.VETERANSKY_TRENING && this.getMapa().getStavEfektu() == StavEfektu.BEZ_NEVYHODY)) {
                     var ryzzier = this.zoznamRytierov.getNahodnyPokrociliRytier();
-                    for (int j = 0; j < 2 * this.cisloTovaru; j++) {
-                        if (r.nextInt() <= 0.5) {
-                            ryzzier.pridajSilu();
-                        } else {
-                            ryzzier.pridajPopularitu();
-                        }
-                    }
+                    this.powerUpKnight(ryzzier, r);
                     this.tovar.add(ryzzier);
                     for (int i = 0; i < 2; i++) {
                         var rytier = this.zoznamRytierov.getNahodnyLegendarnyRytier();
@@ -260,17 +230,30 @@ public class Obchod implements Miesto{
 
             }
         }
+
     }
 
     /**
      * vytvorí grafické znázornenie tovaru
      */
     public void vytvorTovar() {
-
+        Random r = new Random();
         for (int i = 0; i < this.tovar.size(); i++) {
             if (this.tovar.get(i) instanceof ObycajnyRytier rytier) {
                 rytier.kartaRytiera(200 + (i * 250), 100, this.mapa, true, false);
                 rytier.zmenUmiestnenie(this);
+                if (!(rytier instanceof LegendarnyRytier)) {
+                    var xp = 0;
+                    if (this.cisloTovaru < 8) {
+                        xp = r.nextInt(0, 2 + this.cisloTovaru);
+                    } else {
+                        xp = r.nextInt(0, this.cisloTovaru);
+                    }
+                    if (xp >= 8) {
+                        xp = 7;
+                    }
+                    rytier.setSkusenost(xp);
+                }
             }
             if (this.tovar.get(i) instanceof Predmet predmet) {
                 if (i < 3) {
@@ -285,7 +268,9 @@ public class Obchod implements Miesto{
     public void zobrazObchod() {
         this.pozadieObchodu.makeVisible();
         for (Predavatelne predavatelne : this.tovar) {
-                predavatelne.zobrazKartu();
+            predavatelne.zobrazKartu();
+            predavatelne.skryKartu();
+            predavatelne.zobrazKartu();
         }
         this.reroll.makeVisible();
     }
@@ -331,8 +316,10 @@ public class Obchod implements Miesto{
     }
 
     public int[] getSuradnice() {
-        var suradnice = new int[]{this.MIN_X, this.MAX_X, this.MIN_Y, this.MAX_Y};
-        return suradnice;
+        return new int[]{this.MIN_X, this.MAX_X, this.MIN_Y, this.MAX_Y};
+    }
+    public int[] getSuradniceIkona() {
+        return new int[0];
     }
 
     public boolean isOtvorene() {
@@ -382,6 +369,8 @@ public class Obchod implements Miesto{
             this.nastavObchod();
             this.vytvorTovar();
             for (Predavatelne predavatelne : this.tovar) {
+                predavatelne.zobrazKartu();
+                predavatelne.skryKartu();
                 predavatelne.zobrazKartu();
             }
             this.reroll.makeVisible();

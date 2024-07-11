@@ -16,8 +16,10 @@ public class Krcma extends TreningoveMiesto implements Miesto{
     private final int MAX_X = this.MIN_X + 215;
     private final int MIN_Y = 105;
     private final int MAX_Y = this.MIN_Y + 200;
+    private final int Yposun;
     public Krcma(ManazerEventov manazerEventov, Hrac hrac, int Yposun) {
         super(manazerEventov, hrac, 180, 180 + Yposun*40);
+        this.Yposun = Yposun;
     }
 
 
@@ -25,6 +27,8 @@ public class Krcma extends TreningoveMiesto implements Miesto{
         var suradnice = new int[]{this.MIN_X, this.MAX_X, this.MIN_Y, this.MAX_Y};
         return suradnice;
     }
+
+    public int[] getSuradniceIkona() {return new int[]{this.MIN_X + Yposun*20, this.MAX_Y - 75};}
 
     @Override
     public int getDobaTrvania(MaAktivitu maAktivitu) {

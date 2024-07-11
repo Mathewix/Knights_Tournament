@@ -18,18 +18,20 @@ public class Cvicisko extends TreningoveMiesto implements Miesto{
     private final int MIN_Y = 450;
     private final int MAX_X = this.MIN_X + 165;
     private final int MAX_Y = this.MIN_Y + 150;
-
+    private final int Yposun;
 
 
     public Cvicisko(ManazerEventov manazerEventov, Hrac hrac, int Yposun) {
         super(manazerEventov, hrac, 216, 475 + Yposun*40);
-
+        this.Yposun = Yposun;
     }
 
 
     public int[] getSuradnice() {
         return new int[]{this.MIN_X, this.MAX_X, this.MIN_Y, this.MAX_Y};
     }
+
+    public int[] getSuradniceIkona() {return new int[]{this.MIN_X + Yposun*20, this.MAX_Y - 75};}
 
 
     @Override
